@@ -4,7 +4,7 @@ classdef configuration
     properties ( Constant = false )
 
         %%location of EEG Lab
-        eeg_lab_location='../../subject_id_revisions/src/eeglab/'
+        eeg_lab_location='../subject_id_revisions/src/eeglab/'
 
         %% Experiment Name
         exp_name='v1.5.1';
@@ -17,7 +17,7 @@ classdef configuration
 
         %% Directory in which the continues data are stored; Data needs to be present for the program to run.
         tuh_raw_data_dir='/p1/common/datasets/EEG/tuh_eeg_dataset/tuh_eeg_seizure/v1.5.1/edf/';
-        data_dir='../data/tuh_v1.5.1/' 
+        data_dir='data/tuh_v1.5.1/' 
         
         %% channels to load TUH data
         tuh_channels={'EEG FZ-REF','EEG F7-REF', 'EEG F8-REF', 'EEG C3-REF','EEG C4-REF', 'EEG T5-REF', 'EEG T6-REF', 'EEG O1-REF', 'EEG O2-REF'};
@@ -29,7 +29,7 @@ classdef configuration
         test_only = 0;        
         
         %% Directory in which the models will be saved for training and testing will be stored; will be created by the program.
-        base_history_dir='../model_history/';
+        base_history_dir='model_history/';
         history_save = '';
         
         %% number of channels in EEG
@@ -78,7 +78,7 @@ classdef configuration
         hfreq = 48
         
         %% Dir for saving the features
-        features_base_dir='../features/';
+        features_base_dir='features/';
         features_dir='';
         
         
@@ -109,7 +109,7 @@ classdef configuration
         dnn_model_files = 'dnn_models';
 
         %% permenenet temp dir
-        per_tmp_dir='../tmp/'
+        per_tmp_dir='tmp/'
 
         tmp_dir = '';
     end
