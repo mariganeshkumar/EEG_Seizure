@@ -22,8 +22,8 @@ classdef configuration
         %% channels to load TUH data
         tuh_channels={'EEG FZ-REF','EEG F7-REF', 'EEG F8-REF', 'EEG C3-REF','EEG C4-REF', 'EEG T5-REF', 'EEG T6-REF', 'EEG O1-REF', 'EEG O2-REF'};
 
-        %% split to chosen
-        split = 15
+        %% splits used to train the network
+        splits = [3, 5, 10, 15, 30]
         
         %% test only. if set to one training part will be skipped.
         test_only = 0;        
