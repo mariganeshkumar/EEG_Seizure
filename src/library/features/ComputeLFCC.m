@@ -17,8 +17,8 @@ function fbe = ComputeLFCC(data,windowFrames,windowShiftFrames,nFFT,...
     if (~exist('delta2Required', 'var'))
         delta2Required = false;
     end
-    
-    ind=1;
+    windowFrames = int64(round(windowFrames));
+    ind=int64(1);
     fbe=[];
     while ind<length(data)
         if ind+windowFrames-1<length(data)
