@@ -1,5 +1,8 @@
-function [] = make_split_features_for_training()
-	path=genpath('library');
+function [] = make_split_features_for_training(config)
+	if ~exist('config','var')
+		config = configuration;
+	end
+	path=genpath('src/library');
 	addpath(path);
 	config=configuration();
 	addpath(config.eeg_lab_location());
@@ -32,10 +35,10 @@ function [] = make_split_features_for_training()
 					recordings = {recordings(:).name};
 					annotations = dir([sess_dir,'/*.tse_bi']);
 					annotations = {annotations(:).name};
-					seiz_save_dir=strcat(feature_dir,'/train/seiz/',montages{m},'/',...
-						'/',subjects{subj},'/',sessions{sess});
-						bckg_save_dir=strcat(feature_dir,'/train/bckg/', montages{m},'/',...
-						'/',subjects{subj},'/',sessions{sess});
+					seiz_save_dir=strcat(feature_dir,'/train/seiz/',...
+						'/',subjects{subj},'/');
+					bckg_save_dir=strcat(feature_dir,'/train/bckg/',...
+						'/',subjects{subj},'/');
 					for r = 1:length(recordings)
 						EEG_filename = recordings{r};
 						saved_data=load(strcat(sess_dir,'/',EEG_filename));
@@ -108,6 +111,7 @@ function split_seiz_bckg_data(config,EEG_data,EEG_srate,split,splited_annotation
 
 		while start_ind + increment < end_ind
 			data=EEG_data(:, start_ind:start_ind+increment);
+			data = data - mean(data,2);
 			feature = config.feature_function{config.feature}(config,data, EEG_srate);
 			%disp(size(feature))	
 			if splited_annotation{s}{3}=='bckg'
