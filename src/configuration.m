@@ -21,9 +21,10 @@ classdef configuration
         
         %% channels to load TUH data
         tuh_channels={'EEG FZ-REF','EEG F7-REF', 'EEG F8-REF', 'EEG C3-REF','EEG C4-REF', 'EEG T5-REF', 'EEG T6-REF', 'EEG O1-REF', 'EEG O2-REF'};
+        tuh_channels_LE={'EEG FZ-LE','EEG F7-LE', 'EEG F8-LE', 'EEG C3-LE','EEG C4-LE', 'EEG T5-LE', 'EEG T6-LE', 'EEG O1-LE', 'EEG O2-LE'};
 
         %% splits used to train the network
-        splits = [3, 5, 10, 15, 30]
+        splits = [30, 20]
         
         %% test only. if set to one training part will be skipped.
         test_only = 0;        
@@ -41,7 +42,7 @@ classdef configuration
         'LFCC',...                      %2
         'multitaper_spectrogram',...    %3
         };
-        feature = 1;
+        feature = 2;
         feature_function={@average_power_spectrogram, @LFCC_from_front_end_dsp, @multitaper_spectrum};
         
         
@@ -60,14 +61,14 @@ classdef configuration
         samp_rate =250;
         
         %% window size in ms
-        win_size = 500;
+        win_size = 300;
         
         
         %% overlap size in ms
-        overlap = 250;
+        overlap = 150;
         
         %% no of fft points
-        nfft = 256
+        nfft = 512
         
         %% low frequency limit in Hz
         %todo: replace this with bands
@@ -75,7 +76,7 @@ classdef configuration
         
         %% high frequency limit in Hz
         %todo: replace this with bands
-        hfreq = 48
+        hfreq = 125
         
         %% Dir for saving the features
         features_base_dir='features/';
@@ -83,22 +84,22 @@ classdef configuration
         
         
         %% FFT order (log_{2} of fft size) --> need only for LFCC
-        fftorder = 10;
+        fftorder = 9;
         
         %% Number of filters --> need only for LFCC
-        numfilters = 10;
+        numfilters = 25;
         
         %% Number of Ceps --> need only for LFCC
-        numceps = 4;
+        numceps = 20;
         
         %% Delta Needed ?--> need only for LFCC
-        delta_1 = 1;
+        delta_1 = 0;
         
         %% Delta^2 needed? --> needed only for LFCC
-        delta_2 = 1;
+        delta_2 = 0;
         
         %% hidden layer config for ANN
-        hiddenlayers = [1024 512 160];
+        hiddenlayers = [256 256 256 ];
         
        
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Parameters that
