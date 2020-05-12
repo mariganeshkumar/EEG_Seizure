@@ -41,7 +41,7 @@ from keras import losses
 
 from tdnn_utils import load_training_data
 from tdnn_models import get_multichannel_tdnn_model
-from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
+from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, LearningRateScheduler
 from keras.utils.generic_utils import get_custom_objects
 from keras.optimizers import Adam
 
@@ -192,10 +192,13 @@ if os.path.exists(model_dir):
     shutil.rmtree(model_dir)
 os.makedirs(model_dir)
 
+def lr_schduler(epoch):
+	return 0.001/(1+0.1*epoch)
+
 early_stopping = EarlyStopping(patience=10, verbose=1)
 model_checkpoint = ModelCheckpoint(model_dir+'/keras.model',monitor='val_acc', mode='max',save_best_only=True, verbose=1)
-reduce_lr = ReduceLROnPlateau(factor=0.5, patience=1, min_lr=0.00000000001, verbose=1)
-
+reduce_lr = ReduceLROnPlateau(factor=0.5, patience=1, min_lr=0.00000000001, verbose=1, monitor='val_acc', mode='max')
+lr_epoch_wise_reducer = LearningRateScheduler(lr_schduler)
 model.fit_generator(fixed_data_generator(seiz_data,bckg_data),
 	validation_data=fixed_data_generator(seiz_val_data,bckg_val_data),
 	validation_steps=val_data_epoch_size,
