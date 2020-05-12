@@ -5,7 +5,7 @@ function [] = train_multi_channel_tdnn_for_seizure_detection(config)
 	path=genpath('src/library');
 	addpath(path);
 	features_dir = strcat(config.features_dir,'/',num2str(config.feature),'/train');
-	model_dir = strcat(config.history_save);
+	model_dir = strcat(config.history_save,'/',num2str(config.feature));
 	network_config="";
 	for i = 1:length(config.hiddenlayers)
 		network_config = strcat(network_config,num2str(config.hiddenlayers(i)),',');
