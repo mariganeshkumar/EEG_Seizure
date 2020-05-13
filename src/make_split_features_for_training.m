@@ -1,10 +1,9 @@
 function [] = make_split_features_for_training(config)
 	if ~exist('config','var')
-		config = configuration;
+		config = configuration();
 	end
 	path=genpath('src/library');
 	addpath(path);
-	config=configuration();
 	addpath(config.eeg_lab_location());
 	tuh_channels = config.tuh_channels
 
@@ -64,6 +63,7 @@ function [] = make_split_features_for_training(config)
 								end
 							end
 						end	
+						EEG_data = EEG_data - mean(EEG_data,2);
 						for sp = 1:length(splits)
 							split=splits(sp)
 							if is_only_bckg
@@ -94,6 +94,7 @@ function split_only_bckg_data(config,EEG_data,EEG_srate,split,splited_annotation
 
 		while start_ind + increment < end_ind
 			data=EEG_data(:, start_ind:start_ind+increment);
+			%data = data - mean(data,2);
 			feature = config.feature_function{config.feature}(config,data, EEG_srate);
 			SaveFeatures(strcat(bckg_save_dir,'/',num2str(split)),...
 				strcat('/',EEG_g_filename,'_',...
@@ -111,7 +112,7 @@ function split_seiz_bckg_data(config,EEG_data,EEG_srate,split,splited_annotation
 
 		while start_ind + increment < end_ind
 			data=EEG_data(:, start_ind:start_ind+increment);
-			data = data - mean(data,2);
+			%data = data - mean(data,2);
 			feature = config.feature_function{config.feature}(config,data, EEG_srate);
 			%disp(size(feature))	
 			if splited_annotation{s}{3}=='bckg'
