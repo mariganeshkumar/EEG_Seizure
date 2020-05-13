@@ -1,0 +1,1 @@
+Usage: python nedc_eval_eeg.py -odir output ref.list hyp.list

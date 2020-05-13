@@ -1,0 +1,17 @@
+name: nedc_eval_eeg
+synopsis: nedc_eval_eeg [options] ref.list hyp.list
+descr: evaluates hypotheses using standard scoring metrics
+
+options:
+ -odir: the output directory [$PWD/output]
+ -help: display this help message
+
+arguments:
+ ref.list: a list of reference annotation files
+ hyp.list: a list of hypothesis files
+
+example:
+ nedc_eval_eeg -odir ./output/report ref.list hyp.list
+
+  generates a scoring report and outputs it to the directory "./output/report".
+  the report contains inter-rater agreement scores.
