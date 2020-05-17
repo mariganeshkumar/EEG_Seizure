@@ -13,8 +13,14 @@ function [] = prepare_seiz_hypothesis(config,subset,thresold)
 
 	frame_duration=(config.win_size-config.overlap)/1000;
 
+	channel_config = config.tuh_channels;
+	channel_str=num2str(length(channel_config))
+	for channel = 1:length(channel_config)
+		channel_str=strcat(channel_str,{' '},channel_config{channel});
+	end
+
 	subjects = get_all_sub_dir(features_dir);
-	fId = fopen(strcat(model_dir,'/',num2str(thresold),'/hyp.txt'),'w');
+	fId = fopen(strcat(model_dir,'/',num2str(thresold),'/',subset,'_hyp.txt'),'w');
 	for i = 1:length(subjects)
 		disp(strcat('Predicting Sizure for subject :',...
 			num2str(i),'/',num2str(length(subjects))))
@@ -60,23 +66,55 @@ function [] = prepare_seiz_hypothesis(config,subset,thresold)
 				disp(length(seizure_ending_ind))
 				continue
 			end	
-			for s = 1:length(seizure_starting_ind)
-				starting_time = round(seizure_starting_ind(s)*frame_duration,4);
-				ending_time  = round(seizure_ending_ind(s)*frame_duration,4);
-				score = mean(final_score(seizure_starting_ind(s):seizure_ending_ind(s)));
+			s = 1;
+			while s <= length(seizure_starting_ind)
+				starting_ind = seizure_starting_ind(s);
+				ending_ind = seizure_ending_ind(s);
+
+				starting_time = round(starting_ind*frame_duration,4);
+				ending_time  = round(ending_ind*frame_duration,4);
+
+				hypothesis_length = ending_time - starting_time;
+				if hypothesis_length < 40
+					s=s+1;
+					continue;
+				end
+
+				if s < length(seizure_starting_ind)
+					next_starting_time =  round(seizure_starting_ind(s+1)*frame_duration,4);
+					next_ending_time =  round(seizure_ending_ind(s+1)*frame_duration,4);
+					while next_starting_time - ending_time < 80 && s < length(seizure_starting_ind)
+						disp('Applying New Rule')
+						ending_ind = seizure_ending_ind(s+1);
+						ending_time  = round(ending_ind*frame_duration,4);
+						s=s+1;
+						if s < length(seizure_starting_ind)
+							next_starting_time =  round(seizure_starting_ind(s+1)*frame_duration,4);
+							next_ending_time =  round(seizure_ending_ind(s+1)*frame_duration,4);
+						end
+					end
+				end
+
+				
+
+				score = mean(final_score(starting_ind:ending_ind));
 				hyp_line = strcat(g_filename,{'  '},num2str(starting_time),{' '},...
 					num2str(ending_time),{' '},num2str(score));
+				if strcmp(subset,'eval')~=0
+					hyp_line=strcat(hyp_line,{' '},channel_str);
+				end
 				fprintf(fId,'%s',string(hyp_line));
 				fprintf(fId,'\n');
+				s=s+1;
 			end
 		end
 	end	
 	fclose(fId);
-	command = strcat('python3 src/library/eval_scripts/nedc_eval_eeg.py',{' '},...
-		model_dir,'/ref.txt',{' '},...
-		model_dir,'/',num2str(thresold),'/hyp.txt');
-	system(string(command))
-	command = strcat('mv output',{' '},...
-		model_dir,'/',num2str(thresold),'/output');
-	system(string(command))
+	if strcmp(subset,'eval')==0
+		command = strcat('python3 src/library/eval_scripts/nedc_eval_eeg.py',{' '},...
+			'-odir',{' '},model_dir,'/',num2str(thresold),'/output',{' '},...
+			model_dir,'/ref.txt',{' '},...
+			model_dir,'/',num2str(thresold),'/',subset,'_hyp.txt');
+		system(string(command))
+	end
 end
