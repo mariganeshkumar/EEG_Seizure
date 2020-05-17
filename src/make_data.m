@@ -28,7 +28,7 @@ function [] = make_data(config)
 		for m=1:length(montages)
 			montage_dir = strcat(subset_dir,'/',montages{m});
 			sub_dirs = get_all_sub_dir(montage_dir);
-			for sd=1:length(sub_dirs)
+			parfor sd=1:length(sub_dirs)
 				sub_dir = strcat(montage_dir,'/',sub_dirs{sd});
 				subjects = get_all_sub_dir(sub_dir);
 				for subj = 1:length(subjects)
@@ -93,8 +93,10 @@ function [] = make_data(config)
 								ind=1;
 								data=[];
 								c_id=[];
+								%disp(chanlocs)
 								disp(montage_type);
 								for c = 1:length(tuh_channels)
+										%disp(tuh_channels_LE{c})
 										if strcmp(montage_type,'le')
 											c_id(ind) = find(strcmp(chanlocs,tuh_channels_LE{c}));
 										else
@@ -106,7 +108,7 @@ function [] = make_data(config)
 								save_file(session_save_dir,EEG_filename,data,sampling_rate)	
 							catch
 								fId = fopen(strcat(save_dir,'/Error_files'),'a');
-								fprintf(fId,['processing failed: ',EEG_filename,'\n']);
+								fprintf(fId,['processing failed: ',sess_dir,'/',EEG_filename,'\n']);
 								fclose(fId);
 								continue;
 							end
