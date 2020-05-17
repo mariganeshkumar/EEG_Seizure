@@ -40,7 +40,7 @@ from keras.utils.np_utils import to_categorical
 from keras import losses
 
 from tdnn_utils import load_training_data
-from tdnn_models import get_multichannel_tdnn_model
+from tdnn_models import get_multichannel_tdnn_model, get_multichannel_tdnn_lstm_model
 from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, LearningRateScheduler
 from keras.utils.generic_utils import get_custom_objects
 from keras.optimizers import Adam
@@ -142,7 +142,7 @@ def seiz_data_generator(se_data,bc_data):
 		yield batch_train_data, batch_train_label
 
 
-def fixed_data_generator(se_data,bc_data):
+def fixed_data_generator(se_data,bc_data, do_shuffle_bc_data=0):
 	step=0
 	split=0
 	split_data=[]
@@ -178,19 +178,33 @@ def fixed_data_generator(se_data,bc_data):
 		split=(split+1)%no_of_splits
 		if split==0:
 			print('completed first epoch at step : ' +str(step))
+			if do_shuffle_bc_data:
+				split_data=[]
+				split_label=[]
+				for i in range(no_of_splits):
+					split_seiz_data = se_data[i]
+					split_bckg_data = bc_data[i]
+					split_bckg_data = shuffle(split_bckg_data)
+					split_bckg_data = split_bckg_data[0:len(split_seiz_data)]
+					split_seiz_label = [1]*len(split_seiz_data)
+					split_bckg_label = [0]*len(split_bckg_data)
+					combined_data=split_seiz_data+split_bckg_data
+					combined_label=split_seiz_label+split_bckg_label
+					combined_data,combined_label=shuffle(combined_data, combined_label)
+					split_data.append(combined_data)
+					split_label.append(combined_label)
 
 
 
 
-model = get_multichannel_tdnn_model(feat_size, 2, num_channels, network_config)
+model = get_multichannel_tdnn_lstm_model(feat_size, 2, num_channels, network_config)
 adam_opt = Adam(lr=0.001, clipvalue=1)
 model.compile(loss=losses.categorical_crossentropy, optimizer=adam_opt,
               metrics=['accuracy'])
 model.summary()
 
-if os.path.exists(model_dir):
-    shutil.rmtree(model_dir)
-os.makedirs(model_dir)
+if not os.path.exists(model_dir):
+    os.makedirs(model_dir)
 
 def lr_schduler(epoch):
 	return 0.001/(1+0.1*epoch)
@@ -199,7 +213,7 @@ early_stopping = EarlyStopping(patience=10, verbose=1)
 model_checkpoint = ModelCheckpoint(model_dir+'/keras.model',monitor='val_acc', mode='max',save_best_only=True, verbose=1)
 reduce_lr = ReduceLROnPlateau(factor=0.5, patience=1, min_lr=0.00000000001, verbose=1, monitor='val_acc', mode='max')
 lr_epoch_wise_reducer = LearningRateScheduler(lr_schduler)
-model.fit_generator(fixed_data_generator(seiz_data,bckg_data),
+model.fit_generator(fixed_data_generator(seiz_data,bckg_data,do_shuffle_bc_data=1),
 	validation_data=fixed_data_generator(seiz_val_data,bckg_val_data),
 	validation_steps=val_data_epoch_size,
 	steps_per_epoch=seizure_data_epoch_size,

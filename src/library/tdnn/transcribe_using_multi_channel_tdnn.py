@@ -41,7 +41,7 @@ from keras.utils.np_utils import to_categorical
 from keras import losses
 
 from tdnn_utils import load_training_data
-from tdnn_models import get_multichannel_tdnn_model
+from tdnn_models import get_multichannel_tdnn_model, get_multichannel_tdnn_lstm_model
 from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, LearningRateScheduler
 from keras.utils.generic_utils import get_custom_objects
 from keras.optimizers import Adam
@@ -77,7 +77,7 @@ def split_EEG(data, split_frames):
 	return split_data
 
 
-model = get_multichannel_tdnn_model(feat_dim, 2, num_channels, network_config)
+model = get_multichannel_tdnn_lstm_model(feat_dim, 2, num_channels, network_config)
 adam_opt = Adam(lr=0.001, clipvalue=1)
 model.compile(loss=losses.categorical_crossentropy, optimizer=adam_opt,
               metrics=['accuracy'])
