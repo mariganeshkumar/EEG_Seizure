@@ -76,7 +76,7 @@ def run(reflist_a, hyplist_a, map_a, odir_a, rfile_a, fp_a):
     #
     num_files_ref = len(reflist_a)
     num_files_hyp = len(hyplist_a)
-
+    
     if num_files_ref < 1 or num_files_hyp < 1 or \
        num_files_ref != num_files_hyp:
         print("%s (%s: %s): file list error (%s %s)" % \
@@ -1218,31 +1218,31 @@ class NedcTAES():
                        ("False Negatives (FN)", float(self.fn_d[key])))
             fp_a.write("\n")
 
-            fp_a.write("   %30s: %12.4f%%\n" % \
+            fp_a.write("   %30s: %12.2f%%\n" % \
                        ("Sensitivity (TPR, Recall)", self.tpr_d[key] * 100.0))
-            fp_a.write("   %30s: %12.4f%%\n" % \
+            fp_a.write("   %30s: %12.2f%%\n" % \
                        ("Specificity (TNR)", self.tnr_d[key] * 100.0))
-            fp_a.write("   %30s: %12.4f%%\n" % \
+            fp_a.write("   %30s: %12.2f%%\n" % \
                        ("Precision (PPV)", self.ppv_d[key] * 100.0))
-            fp_a.write("   %30s: %12.4f%%\n" % \
+            fp_a.write("   %30s: %12.2f%%\n" % \
                        ("Negative Pred. Value (NPV)", self.npv_d[key] * 100.0))
-            fp_a.write("   %30s: %12.4f%%\n" % \
+            fp_a.write("   %30s: %12.2f%%\n" % \
                        ("Miss Rate (FNR)", self.fnr_d[key] * 100.0))
-            fp_a.write("   %30s: %12.4f%%\n" % \
+            fp_a.write("   %30s: %12.2f%%\n" % \
                        ("False Positive Rate (FPR)", self.fpr_d[key] * 100.0))
-            fp_a.write("   %30s: %12.4f%%\n" % \
+            fp_a.write("   %30s: %12.2f%%\n" % \
                        ("False Discovery Rate (FDR)", self.fdr_d[key] * 100.0))
-            fp_a.write("   %30s: %12.4f%%\n" % \
+            fp_a.write("   %30s: %12.2f%%\n" % \
                        ("False Omission Rate (FOR)", self.for_d[key] * 100.0))
-            fp_a.write("   %30s: %12.4f%%\n" % \
+            fp_a.write("   %30s: %12.2f%%\n" % \
                        ("Accuracy", self.acc_d[key] * 100.0))
-            fp_a.write("   %30s: %12.4f%%\n" % \
+            fp_a.write("   %30s: %12.2f%%\n" % \
                        ("Misclassification Rate", self.msr_d[key] * 100.0))
-            fp_a.write("   %30s: %12.4f%%\n" % \
+            fp_a.write("   %30s: %12.2f%%\n" % \
                        ("Prevalence", self.prv_d[key] * 100.0))
-            fp_a.write("   %30s: %12.4f\n" % \
+            fp_a.write("   %30s: %12.2f\n" % \
                        ("F1 Score (F Ratio)", self.f1s_d[key]))
-            fp_a.write("   %30s: %12.4f per 24 hours\n" % \
+            fp_a.write("   %30s: %12.2f per 24 hours\n" % \
                        ("False Alarm Rate", self.flr_d[key]))
             fp_a.write("\n")
 
@@ -1253,47 +1253,47 @@ class NedcTAES():
 
         # display the standard derived values
         #
-        fp_a.write("   %30s: %12.0f   <**\n" % \
+        fp_a.write("   %30s: %12.2f   <**\n" % \
                    ("Total", float(self.sum_tgt_d)))
-        fp_a.write("   %30s: %12.0f   <**\n" % \
+        fp_a.write("   %30s: %12.2f   <**\n" % \
                    ("Hits", float(self.sum_hit_d)))
-        fp_a.write("   %30s: %12.0f   <**\n" % \
+        fp_a.write("   %30s: %12.2f   <**\n" % \
                    ("Misses", float(self.sum_mis_d)))
-        fp_a.write("   %30s: %12.0f   <**\n" % \
+        fp_a.write("   %30s: %12.2f   <**\n" % \
                    ("False Alarms", float(self.sum_fal_d)))
-        fp_a.write("   %30s: %12.0f\n" % \
+        fp_a.write("   %30s: %12.2f\n" % \
                    ("Insertions", float(self.sum_ins_d)))
-        fp_a.write("   %30s: %12.0f\n" % \
+        fp_a.write("   %30s: %12.2f\n" % \
                    ("Deletions", float(self.sum_del_d)))
         fp_a.write("\n")
 
-        fp_a.write("   %30s: %12.0f\n" % \
+        fp_a.write("   %30s: %12.2f\n" % \
                    ("True Positives(TP)", float(self.sum_tp_d)))
-        fp_a.write("   %30s: %12.0f\n" % \
+        fp_a.write("   %30s: %12.2f\n" % \
                    ("False Positives (FP)", float(self.sum_fp_d)))
         fp_a.write("\n")
 
-        fp_a.write("   %30s: %12.4f%%\n" % \
+        fp_a.write("   %30s: %12.2f%%\n" % \
                    ("Sensitivity (TPR, Recall)", self.sum_tpr_d * 100.0))
-        fp_a.write("   %30s: %12.4f%%\n" % \
+        fp_a.write("   %30s: %12.2f%%\n" % \
                    ("Miss Rate (FNR)", self.sum_fnr_d * 100.0))
-        fp_a.write("   %30s: %12.4f%%\n" % \
+        fp_a.write("   %30s: %12.2f%%\n" % \
                    ("Accuracy", self.sum_acc_d * 100.0))
-        fp_a.write("   %30s: %12.4f%%\n" % \
+        fp_a.write("   %30s: %12.2f%%\n" % \
                    ("Misclassification Rate", self.sum_msr_d * 100.0))
-        fp_a.write("   %30s: %12.4f%%\n" % \
+        fp_a.write("   %30s: %12.2f%%\n" % \
                    ("Prevalence", self.sum_prv_d * 100.0))
-        fp_a.write("   %30s: %12.4f\n" % \
+        fp_a.write("   %30s: %12.2f\n" % \
                    ("F1 Score", self.sum_f1s_d))
         fp_a.write("\n")
 
         # display the overall false alarm rate
         #
-        fp_a.write("   %30s: %12.4f secs\n" % \
+        fp_a.write("   %30s: %12.2f secs\n" % \
                    ("Total Duration", self.total_dur_d))
-        fp_a.write("   %30s: %12.4f events\n" % \
+        fp_a.write("   %30s: %12.2f events\n" % \
                    ("Total False Alarms", self.sum_fp_d))
-        fp_a.write("   %30s: %12.4f per 24 hours\n" % \
+        fp_a.write("   %30s: %12.2f per 24 hours\n" % \
                    ("Total False Alarm Rate", self.sum_flr_d))
         fp_a.write("\n")
 

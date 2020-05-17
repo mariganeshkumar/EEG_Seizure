@@ -32,6 +32,7 @@ import sys_tools.nedc_file_tools as nft
 #
 DEF_CLASS = "seiz"
 BCKG_CLASS = "bckg"
+DEF_CONF = float(1.0)
 FIRST_EVENT_INDEX = 0
 LAST_EVENT_INDEX = -1
 START_TIME_INDEX = 0
@@ -96,23 +97,26 @@ def parse_ref(f_cont):
         #
         tokenized = line.split()
 
-        # ensure we have all 5 entries
+        # ensure we have at least fname start stop lbl
         #
-        if len(tokenized) != 5:
+        if len(tokenized) < 4:
             continue
 
-        # file name, used as key
+        # collect required values
         #
-        fname = tokenized[0]
+        fname, start, stop, lbl = tokenized[:4]
 
-        # get the start, stop time as well as
-        # event label and confidence
+        # if we have a confidence value
         #
-        start = float(tokenized[1])
-        stop = float(tokenized[2])
-        lbl = tokenized[3]
-        conf = float(tokenized[4])
+        if len(tokenized) == 5:
+            conf = float(tokenized[4])
+        else:
+            conf = DEF_CONF
 
+        # convert start stop to float
+        #
+        start, stop = float(start), float(stop)
+            
         # if this is a new file
         #
         if fname not in odict:
@@ -292,21 +296,26 @@ def parse_hyp(f_cont, duration_dict):
         #
         tokenized = line.split()
 
-        # if there are not four entries...
+        # ensure we have at least fname, start, stop
         #
-        if len(tokenized) != 4:
+        if len(tokenized) < 3:
             continue
 
-        # grab the file name
+        # collect the required values
         #
-        fname = tokenized[0]
+        fname, start, stop = tokenized[:3]
 
-        # grab the start, stop, and confidence of event
+        # if we have a confidence value
         #
-        start = float(tokenized[1])
-        stop = float(tokenized[2])
-        conf = float(tokenized[3])
-
+        if len(tokenized) == 4:
+            conf = float(tokenized[3])
+        else:
+            conf = DEF_CONF
+            
+        # convert start/stop to floats
+        #
+        start, stop = float(start), float(stop)
+        
         # if this file was not in the dictionary
         #
         if fname not in odict:
