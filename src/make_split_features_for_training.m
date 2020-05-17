@@ -40,12 +40,22 @@ function [] = make_split_features_for_training(config)
 						'/',subjects{subj},'/');
 					for r = 1:length(recordings)
 						EEG_filename = recordings{r};
+						EEG_g_filename=strsplit(EEG_filename,'.');
+						EEG_g_filename=EEG_g_filename{1};
+
+						extracted_bckg_files = dir([bckg_save_dir,'/',num2str(splits(1)),'/',EEG_g_filename,'*.mat']);
+						extracted_bckg_files = {extracted_bckg_files(:).name};
+						extracted_seiz_files = dir([seiz_save_dir,'/',num2str(splits(1)),'/',EEG_g_filename,'*.mat']);
+						extracted_seiz_files = {extracted_seiz_files(:).name};
+						if ~isempty(extracted_seiz_files) || ~isempty(extracted_bckg_files)
+							continue;
+						end
+
 						saved_data=load(strcat(sess_dir,'/',EEG_filename));
 						EEG_data=saved_data.data;
 						EEG_srate=saved_data.sampling_rate;
 
-						EEG_g_filename=strsplit(EEG_filename,'.');
-						EEG_g_filename=EEG_g_filename{1};
+						
 						annotations = fopen(strcat(sess_dir,'/',EEG_g_filename,'.tse_bi'),'r');
 						splited_annotation={}
 						a_ind=1;
@@ -66,6 +76,13 @@ function [] = make_split_features_for_training(config)
 						EEG_data = EEG_data - mean(EEG_data,2);
 						for sp = 1:length(splits)
 							split=splits(sp)
+							extracted_bckg_files = dir([bckg_save_dir,'/',num2str(split),'/',EEG_g_filename,'*.mat']);
+							extracted_bckg_files = {extracted_bckg_files(:).name};
+							extracted_seiz_files = dir([seiz_save_dir,'/',num2str(split),'/',EEG_g_filename,'*.mat']);
+							extracted_seiz_files = {extracted_seiz_files(:).name};
+							if ~isempty(extracted_seiz_files) || ~isempty(extracted_bckg_files)
+								continue;
+							end
 							if is_only_bckg
 								split_only_bckg_data(config,EEG_data,EEG_srate,split,splited_annotation,bckg_save_dir,EEG_g_filename)
 							else
