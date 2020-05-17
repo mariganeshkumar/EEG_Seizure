@@ -36,22 +36,25 @@ function [] = transcribe_EEG_using_multi_channel_tdnn(config,subset)
 		disp(strcat('Extracting transcription for subject :',...
 			num2str(i),'/',num2str(length(subjects))))
 		subject_dir = strcat(features_dir,'/',subjects{i});
+		subject_save_dir = strcat(model_dir,'/transcription/',subset,'/',subjects{i});
 		recordings = dir([subject_dir,'/*.mat']);
 		recordings = {recordings(:).name};
-		for r = 1:length(recordings)
+		parfor r = 1:length(recordings)
 			EEG_filename = recordings{r};
 			EEG_g_filename=strsplit(EEG_filename,'.');
 			EEG_g_filename=EEG_g_filename{1};
 			EEG_g_filename=strsplit(EEG_g_filename,'_');
 			EEG_g_filename=strcat(EEG_g_filename{1},'_',EEG_g_filename{2},'_',EEG_g_filename{3});
-			if exist(strcat(subject_dir,'/',EEG_g_filename,'_tdnn_trans.mat'),'file')
+			if exist(strcat(subject_save_dir,'/',EEG_g_filename,'_tdnn_trans.mat'),'file')
 				continue
+			elseif ~exist(strcat(subject_save_dir),'dir')
+				mkdir(subject_save_dir)
 			end 
 			disp(EEG_g_filename)
 			python3_inference_command=strcat('bash src/library/tdnn/transcribe_using_multi_channel_tdnn.bash',...
 				{' '},network_config,{' '},splits_config,{' '},...
 				subject_dir,'/',EEG_filename,{' '},...
-				subject_dir,'/',EEG_g_filename,'_tdnn_trans.mat',....
+				subject_save_dir,'/',EEG_g_filename,'_tdnn_trans.mat',....
 				{' '},model_dir,'/keras.model',{' '},...
 				num2str(mod(r,2)));
 			
