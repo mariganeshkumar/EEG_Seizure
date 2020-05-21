@@ -69,9 +69,13 @@ feat_dim=data.shape[1]
 def split_EEG(data, split_frames):
 	total_frames=data.shape[2]
 	split_data=[]
+	half_split = math.floor(split_frames/2)
+	split_frames = half_split*2
 	for i in range(total_frames):
-		if i+split_frames<=total_frames:
-			split_data.append(data[:,:,i:i+split_frames])
+		if i - half_split < 0:
+			split_data.append(data[:,:,:split_frames])
+		elif i - half_split >= 0 and i+half_split<=total_frames:
+			split_data.append(data[:,:,i-half_split:i+half_split])
 		else:
 			split_data.append(data[:,:,-split_frames:])
 	return split_data
