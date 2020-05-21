@@ -31,7 +31,7 @@ classdef configuration
         test_only = 0;        
         
         %% Directory in which the models will be saved for training and testing will be stored; will be created by the program.
-        base_history_dir='model_history_v2/';
+        base_history_dir='model_history/';
         history_save = '';
         
         %% number of channels in EEG
@@ -100,8 +100,7 @@ classdef configuration
         delta_2 = 0;
         
         %% hidden layer config for ANN
-        %%  hiddenlayers = [256 256 256 128 32 32 ];
-        hiddenlayers = [256 256 128 256 32 32 ];
+        hiddenlayers = [256 256 256 128 32 32 ];
         
        
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Parameters that
