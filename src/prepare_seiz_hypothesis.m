@@ -18,13 +18,13 @@ function [] = prepare_seiz_hypothesis(config,subset,thresold)
 	for channel = 1:length(channel_config)
 		channel_str=strcat(channel_str,{' '},channel_config{channel});
 	end
-
-	subjects = get_all_sub_dir(features_dir);
+	transcription_dir = strcat(model_dir,'/transcription/',subset,'/');
+	subjects = get_all_sub_dir(transcription_dir);
 	fId = fopen(strcat(model_dir,'/',num2str(thresold),'/',subset,'_hyp.txt'),'w');
 	for i = 1:length(subjects)
 		disp(strcat('Predicting Sizure for subject :',...
 			num2str(i),'/',num2str(length(subjects))))
-		subject_dir = strcat(features_dir,'/',subjects{i});
+		subject_dir = strcat(transcription_dir,'/',subjects{i});
 		transcription = dir([subject_dir,'/*_tdnn_trans.mat']);
 		transcription = {transcription(:).name};
 		for r = 1:length(transcription)
